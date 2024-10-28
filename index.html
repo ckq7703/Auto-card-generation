@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartPro Tools</title>
+    <style>
+        body {
+            padding: 20px;
+            margin: 0; /* Bỏ margin */
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        input, button, textarea {
+            padding: 10px;
+            margin: 10px 0;
+            width: 100%;
+        }
+
+        .box-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* 2 cột */
+            grid-gap: 40px; /* Khoảng cách giữa các item */
+            margin-top: 20px;
+            position: relative;
+        }
+
+        .box-item {
+            height: 5.89cm;
+			width: 9.37cm;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            box-sizing: border-box;
+            border: 2px solid black; /* Đường viền của mỗi box */
+            background-color: white; /* Đảm bảo box có nền trắng */
+            padding: 10px;
+        }
+
+        .logo-container {
+            display: flex; /* Hiển thị hai logo bên cạnh nhau */
+            justify-content: space-between; /* Căn chỉnh đều khoảng cách giữa các logo */
+            width: 100%; /* Để chiếm toàn bộ chiều rộng của box */
+            margin-bottom: 10px; /* Khoảng cách giữa logo và tên */
+            max-height: 30%;
+
+        }
+
+        .logo-container img {
+            max-width: 40%; /* Điều chỉnh kích thước logo */
+            max-height: 30%; /* Điều chỉnh kích thước logo */
+            object-fit: contain; /* Đảm bảo giữ tỷ lệ */
+        }
+
+        .box-item p {
+            font-size: 16px; /* Kích thước chữ mặc định */
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        /* Đường kẻ dọc màu đỏ giữa các cột */
+        .box-container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 1px;
+            height: 100%;
+            background-image: linear-gradient(to bottom, rgb(79, 79, 79) 50%, transparent 50%);
+            background-size: 2px 10px; /* Điều chỉnh độ dài của nét và khoảng cách */
+        }
+
+        /* Đường kẻ ngang màu đỏ dưới mỗi hàng box */
+        .box-container > .box-item:nth-child(2n)::after {
+            content: "";
+            position: absolute;
+            bottom: -20px;
+            left: -420px;
+            width: 800px;
+            height: 1px;
+            background-image: linear-gradient(to right, rgb(79, 79, 79) 50%, transparent 50%);
+            background-size: 10px 2px; /* Điều chỉnh độ dài của nét và khoảng cách */
+        }
+
+        @media print {
+
+             .page-break {
+                display: block; /* Hiển thị khi in */
+                page-break-after: always; /* Tạo ngắt trang sau phần tử này */
+            }
+            @page {
+                margin: 0.5cm; /* Đặt cách đầu trang 0.5cm */
+            }
+            
+            body {
+                margin: 0; /* Bỏ margin để tránh bị cắt */
+            }
+
+            .box-container {
+                display: grid; /* Giữ lưới 2 cột khi in */
+                grid-template-columns: repeat(2, 1fr); /* 2 cột */
+                grid-gap: 40px; /* Khoảng cách giữa các item */
+            }
+
+            .box-item {
+                page-break-inside: avoid; /* Tránh cắt box khi in */
+            }
+
+            /* Đường kẻ dọc màu đỏ giữa các cột sẽ không in */
+            .box-container::before {
+                display: block; /* Hiển thị đường kẻ khi in */
+            }
+
+            /* Đường kẻ ngang màu đỏ dưới mỗi hàng box cũng sẽ in */
+            .box-container > .box-item:nth-child(2n)::after {
+                display: block; /* Hiển thị đường kẻ khi in */
+            }
+            .box-container::before, .box-container .box-item:nth-child(2n)::after {
+                -webkit-print-color-adjust: exact;
+                color-adjust: exact; /* Ensure print displays colors */
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Upload Logo và Nhập Danh Sách Tên</h2>
+
+    <label for="logoInput1">Upload Logo bên trái:</label>
+    <input type="file" id="logoInput1" accept="image/*">
+
+    <label for="logoInput2">Upload Logo bên phải:</label>
+    <input type="file" id="logoInput2" accept="image/*">
+
+    <label for="logoWidth">Nhập chiều rộng logo (% hoặc px):</label>
+    <input type="text" id="logoWidth" placeholder="Ví dụ: 40% hoặc 100px">
+
+    <label for="logoHeight">Nhập chiều cao logo (% hoặc px):</label>
+    <input type="text" id="logoHeight" placeholder="Ví dụ: 30% hoặc 100px">
+
+    <label for="fontSize">Nhập kích thước chữ (px, em, %):</label>
+    <input type="text" id="fontSize" placeholder="Ví dụ: 40px, 2em, 150%">
+	
+
+	
+	<label for="marginTop">Nhập giá trị margin-top cho tên (px, em, %):</label>
+	<input type="text" id="marginTop" placeholder="Ví dụ: 10px, 1em, 5%">
+	
+		<label for="logoAlignment">Chọn căn chỉnh dọc giữa hai logo:</label>
+	<select id="logoAlignment">
+		<option value="flex-start">Căn lên trên</option>
+		<option value="center">Căn giữa</option>
+		<option value="flex-end">Căn xuống dưới</option>
+	</select>
+	<br>
+<br>
+    <label for="textInput">Nhập Danh Sách Tên (mỗi tên một dòng hoặc phân cách bằng dấu phẩy):</label>
+    <textarea id="textInput" rows="6" placeholder="Nhập danh sách tên..."></textarea>
+
+    <button onclick="generateBoxes()">Bắt đầu</button>
+<div class="page-break"></div>
+    <div class="box-container" id="boxContainer"></div>
+</div>
+
+
+<script>
+    let logoURL1 = '';
+    let logoURL2 = '';
+
+    // Xử lý sự kiện khi người dùng chọn logo
+    document.getElementById('logoInput1').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                logoURL1 = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    document.getElementById('logoInput2').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                logoURL2 = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Hàm để tạo box với logo và text
+    function generateBoxes() {
+        const textInput = document.getElementById('textInput').value;
+        const boxContainer = document.getElementById('boxContainer');
+        const logoWidth = document.getElementById('logoWidth').value; // Lấy kích thước chiều rộng
+        const logoHeight = document.getElementById('logoHeight').value; // Lấy kích thước chiều cao
+        const fontSize = document.getElementById('fontSize').value; // Lấy kích thước chữ
+		const marginTop = document.getElementById('marginTop').value; // Lấy giá trị margin-top
+		const logoAlignment = document.getElementById('logoAlignment').value; // Lấy giá trị căn chỉnh dọc
+
+        if (!logoURL1 || !logoURL2 || !textInput.trim()) {
+            alert('Vui lòng upload 2 logo và nhập danh sách tên.');
+            return;
+        }
+
+        const names = textInput.split(/\n|,/).map(name => name.trim()).filter(name => name);
+        boxContainer.innerHTML = '';
+
+        names.forEach((name) => {
+            const boxItem = document.createElement('div');
+            boxItem.className = 'box-item';
+
+            const logoContainer = document.createElement('div');
+            logoContainer.className = 'logo-container';
+
+            const img1 = document.createElement('img');
+            img1.src = logoURL1;
+
+            const img2 = document.createElement('img');
+            img2.src = logoURL2;
+
+            // Cập nhật kích thước cho các logo
+            if (logoWidth) img1.style.maxWidth = logoWidth;
+            if (logoHeight) img1.style.maxHeight = logoHeight;
+            if (logoWidth) img2.style.maxWidth = logoWidth;
+            if (logoHeight) img2.style.maxHeight = logoHeight;
+
+		   // Cập nhật căn chỉnh dọc cho container chứa logo
+			if (logoAlignment) logoContainer.style.alignItems = logoAlignment;
+		
+            logoContainer.appendChild(img1);
+            logoContainer.appendChild(img2);
+
+            const p = document.createElement('p');
+            p.textContent = name.toUpperCase();
+
+            // Cập nhật kích thước chữ cho phần tử <p>
+            if (fontSize) p.style.fontSize = fontSize;
+			
+			// Cập nhật margin-top cho thẻ <p>
+			if (marginTop) p.style.marginTop = marginTop;
+
+            boxItem.appendChild(logoContainer);
+            boxItem.appendChild(p);
+            boxContainer.appendChild(boxItem);
+        });
+    }
+</script>
+
+</body>
+</html>
